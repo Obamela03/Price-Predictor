@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<section class="vh-100 container d-flex flex-column flex-md-row justify-content-center align-items-center" id="all-sections">
+    <div class="container d-flex flex-column flex-md-row justify-content-center align-items-center" id="all-sectionss">
+
+      <!-- Left side: Welcome message -->
+      <div class="col-12 col-md-6 p-5 text-center text-md-start">
+        <h1 class="fw-bold text-black">Predict!</h1>
+        <p class="lead text-black fs-4">
+          Fill the short form and get a calculated estimate of the property price.
+          The required details are not sensitive, and will not be used for any other purposes!
+        </p>
+      </div>
+      
+      <!-- Right side: Login form -->
+      <div class="col-12 col-md-6 p-5">
+        <div class="custom-form-card p-4 bg-white rounded shadow-sm">
+          <h2 class="mb-4 text-center text-black">Enter House Details</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Predict</button>
+            </form>
+        </div>
+      </div>
+    </div>
+</section>
+
+{% endblock %}

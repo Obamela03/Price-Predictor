@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+{% block content %}
+
+<section class="vh-100 container d-flex flex-column flex-md-row justify-content-center align-items-center" id="all-sections">
+    <div class="container d-flex flex-column flex-md-row justify-content-center align-items-center" id="all-sectionss">
+
+      <!-- Left side: Welcome message -->
+      <div class="col-12 col-md-6 p-5 text-center text-md-start">
+        <h1 class="fw-bold text-black">Join Our Community!</h1>
+        <p class="lead text-black fs-4">
+          Create your account to unlock powerful property price predictions. With just a few details, you’ll be ready to explore data-driven insights and make smarter real estate decisions.
+        </p>
+      </div>
+      
+      <!-- Right side: Login form -->
+      <div class="col-12 col-md-6 p-5">
+        <div class="custom-form-card p-4 bg-white rounded shadow-sm">
+          <h2 class="mb-4 text-center text-black">Sign Up</h2>
+          <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Register</button>
+            </form>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- Hero Section -->
+<section class="bg-dark text-white text-center py-5" id="aboutus">
+  <div class="container">
+
+    <!-- About Us -->
+    <section class="py-5">
+      <div class="row align-items-center">
+        <div class="col-md-6 text-center">
+          <img src="{% static 'core/images/abtus.png' %}" alt="About Icon" class="img-fluid rounded shadow-sm">
+        </div>
+        <div class="col-md-6 mb-4 mb-md-0">
+          <h2>About This WebApp</h2>
+          <p>
+            Unlock the power of data to estimate property prices in seconds. Simply enter a few key details about a property, and watch as our intelligent model predicts its true market value.
+          <p>
+            Powered by cutting-edge machine learning, our platform delivers smart, accurate, and realistic estimates—helping you make confident real estate decisions with ease.          </p>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section class="bg-dark text-white text-center py-5">
+      <div class="row text-center justify-content-center">
+        <div class="col-md-4 mb-4">
+          <div class="p-4 border rounded-4 h-100 shadow-sm">
+            <h4 class="fw-bold">Price Predictions</h4>
+            <p class="fs-5">Get instant, thoroughly evaluated and tested price estimates based on a property features.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="p-4 border rounded-4 h-100 shadow-sm" >
+            <h4 class="fw-bold">Easy Inputs</h4>
+            <p class="fs-5">Simply enter Median Income, house age, number rooms, bedrooms, population, and average occupancy. Every input is explained in detail once you log-in</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="p-4 border rounded-4 h-100 shadow-sm" style="border: 2px solid red; padding: 10px;">
+            <h4 class="fw-bold">Realistic Predictions</h4>
+            <p class="fs-5">Our XGBoost regression model has been extremely trained on real estate data for accurate result</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="p-4 border rounded-4 h-100 shadow-sm">
+            <h4 class="fw-bold">Secure & Private</h4>
+            <p class="fs-5">Your data is protected. However, do not at any stage, use your sensitive information such as banking details, identity number etc.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section class="text-white text-center py-5" id="contactus" style="background-color: #8b8b8b;">
+  <div class="container">
+
+    <!-- Two Column Section -->
+    <section class="py-5">
+      <div class="container">
+        <div class="row align-items-center">
+
+            <div class="col-md-6 mb-4 mb-md-0">
+                <h2>Get in Touch</h2>
+                <p>
+                Have questions or want to learn more? Reach out to the developer. We're here to help you with your property journey.
+                </p>
+                <p>
+                Email: obamelam@gmail.com<br>
+                Phone: +27 81 392 6380<br>
+                Address: --
+                </p>
+            </div>
+
+            <div class="col-md-6 text-center">
+                <img src="{% static 'core/images/contact.png' %}" alt="Contact Icon" class="img-fluid rounded shadow-sm">
+            </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional Feature Highlights -->
+    <section class="text-white text-center py-5">
+      <div class="container">
+        <div class="row text-center">
+          <div class="col-md-4 mb-4">
+            <div class="p-4 border rounded-4 h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.1);">
+              <h4 class="fw-bold">Responsive Support</h4>
+              <p>We respond quickly to inquiries and provide helpful assistance.</p>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="p-4 border rounded-4 h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.1);">
+              <h4 class="fw-bold">Community Driven</h4>
+              <p>Your feedback helps us grow and improve the platform every day.</p>
+            </div>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="p-4 border rounded-4 h-100 shadow-sm" style="background-color: rgba(255, 255, 255, 0.1);">
+              <h4 class="fw-bold">Secure Communication</h4>
+              <p>All your messages are private and encrypted for your safety.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</section>
+
+{% endblock %}
