@@ -1,16 +1,16 @@
 """
-ASGI config for house_price_predictor project.
+ASGI config for price_predictor project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
 For more information on this file, see
-https://docs.djangoproject.com/en/5.1/howto/deployment/asgi/
+https://docs.djangoproject.com/en/dev/howto/deployment/asgi/
 """
 
 import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'house_price_predictor.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'price_predictor.settings')
 
 application = get_asgi_application()
