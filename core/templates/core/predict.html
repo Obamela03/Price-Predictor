@@ -12,7 +12,7 @@
       .card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
       .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
       label { font-size: 14px; color: #374151; display: block; margin-bottom: 6px; }
-      input { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 10px; }
+      input, select { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 10px; background: white; }
       button { padding: 12px 14px; border: 0; border-radius: 10px; cursor: pointer; }
       .btn { background: #111827; color: white; }
       .muted { color: #6b7280; font-size: 14px; }
@@ -38,7 +38,6 @@
         </div>
       {% endif %}
     </header>
-
 
     {% if error %}
       <div class="card error">
@@ -70,15 +69,44 @@
           {% for name in fields %}
             <div>
               <label for="id_{{ name }}">{{ name }}</label>
-              <input
-                id="id_{{ name }}"
-                name="{{ name }}"
-                type="number"
-                step="any"
-                required
-                value="{% if submitted %}{{ submitted|get_item:name }}{% endif %}"
-                placeholder="Enter {{ name }}"
-              />
+
+              {% if name == "GeoCluster" %}
+                <select id="id_GeoCluster" name="GeoCluster" required>
+                  <option value="">Select a region</option>
+
+                  {# Best case: friendly labels dict passed from view #}
+                  {% if geo_cluster_labels %}
+                    {% for opt in geo_cluster_labels %}
+                      <option value="{{ opt.value }}"
+                        {% if submitted and submitted|get_item:"GeoCluster" == opt.value|stringformat:"s" %}selected{% endif %}
+                      >
+                        {{ opt.label }}
+                      </option>
+                    {% endfor %}
+
+                  {# Fallback: numeric regions 0..k-1 #}
+                  {% else %}
+                    {% for i in geo_k_range %}
+                      <option value="{{ i }}"
+                        {% if submitted and submitted|get_item:"GeoCluster" == i|stringformat:"s" %}selected{% endif %}
+                      >
+                        Region {{ i }}
+                      </option>
+                    {% endfor %}
+                  {% endif %}
+                </select>
+
+              {% else %}
+                <input
+                  id="id_{{ name }}"
+                  name="{{ name }}"
+                  type="number"
+                  step="any"
+                  required
+                  value="{% if submitted %}{{ submitted|get_item:name }}{% endif %}"
+                  placeholder="Enter {{ name }}"
+                />
+              {% endif %}
             </div>
           {% endfor %}
         </div>
@@ -90,6 +118,12 @@
         <p class="muted" style="margin-top: 12px;">
           Feature order is fixed in the backend — keep training and form fields aligned.
         </p>
+
+        {% if "GeoCluster" in fields %}
+          <p class="muted" style="margin-top: 8px;">
+            GeoCluster is a region feature learned from latitude/longitude using K-Means clustering.
+          </p>
+        {% endif %}
       </form>
     </div>
 

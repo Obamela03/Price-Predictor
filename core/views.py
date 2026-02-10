@@ -14,6 +14,8 @@ from .ml.predict import predict_price
 
 ARTIFACTS_DIR = Path(__file__).resolve().parent / "ml" / "artifacts"
 FEATURES_PATH = ARTIFACTS_DIR / "feature_names.json"
+GEO_K_REPORT_PATH = ARTIFACTS_DIR / "geo_k_report.json"
+GEO_LABELS_PATH = ARTIFACTS_DIR / "geo_cluster_labels.json"
 
 
 def load_feature_names() -> list[str]:
@@ -36,23 +38,39 @@ def predict_view(request):
     except Exception as e:
         return render(request, "core/predict.html", {"fields": [], "error": str(e)})
 
-    context = {"fields": fields, "submitted": {}}
+    context = {
+        "fields": fields,
+        "submitted": {},
+    }
+
+    geo_k_range, geo_cluster_labels = load_geo_dropdown()
+    context["geo_k_range"] = geo_k_range
+    context["geo_cluster_labels"] = geo_cluster_labels
 
     if request.method == "POST":
-        submitted = {}
+        submitted: dict[str, str] = {}
+        raw_features: dict[str, float] = {}
+
         try:
-            features = []
+            # If your final training uses GeoCluster (and dropped Latitude/Longitude),
+            # the form must provide GeoCluster (as a number or a dropdown).
             for name in fields:
                 raw = request.POST.get(name, "")
                 submitted[name] = raw
                 raw = (raw or "").strip()
+
                 if raw == "":
                     raise ValueError(f"Missing value for {name}")
-                features.append(float(raw))
 
-            y_pred = predict_price(features)
+                # GeoCluster must be an integer label, but we can parse it as float then cast
+                if name == "GeoCluster":
+                    raw_features[name] = float(int(float(raw)))
+                else:
+                    raw_features[name] = float(raw)
 
-            # California housing target is in 100k units
+            # Predict (returns target in $100,000 units)
+            y_pred = predict_price(raw_features)
+
             context["prediction"] = round(y_pred * 100_000, 2)
             context["raw_prediction"] = float(y_pred)
             context["submitted"] = submitted
@@ -62,6 +80,7 @@ def predict_view(request):
             context["submitted"] = submitted
 
     return render(request, "core/predict.html", context)
+
 
 @require_http_methods(["GET", "POST"])
 def register_view(request):
@@ -75,3 +94,25 @@ def register_view(request):
         form = UserCreationForm()
 
     return render(request, "registration/register.html", {"form": form})
+
+def load_geo_dropdown():
+    """
+    Returns (geo_k_range, geo_cluster_labels)
+    geo_cluster_labels is a list of {"value": int, "label": str} if available.
+    """
+    geo_k = 6  # fallback
+    if GEO_K_REPORT_PATH.exists():
+        report = json.loads(GEO_K_REPORT_PATH.read_text(encoding="utf-8"))
+        geo_k = int(report.get("chosen_k", geo_k))
+
+    geo_k_range = list(range(geo_k))
+
+    geo_cluster_labels = None
+    if GEO_LABELS_PATH.exists():
+        labels = json.loads(GEO_LABELS_PATH.read_text(encoding="utf-8"))
+        # Expecting dict: {"0": "South Coast", "1": "Central Valley", ...}
+        if isinstance(labels, dict):
+            geo_cluster_labels = [{"value": int(k), "label": str(v)} for k, v in labels.items()]
+            geo_cluster_labels = sorted(geo_cluster_labels, key=lambda x: x["value"])
+
+    return geo_k_range, geo_cluster_labels
